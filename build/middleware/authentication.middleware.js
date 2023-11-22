@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
         });
     }
     try {
-        jwt.verify(token, process.env.JWT_SECRET_KEY);
+        jwt.verify(token, process.env.JWT_SECRET);
         next();
     }
     catch (e) {

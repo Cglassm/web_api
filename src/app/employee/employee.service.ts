@@ -1,4 +1,4 @@
-import { NotFoundError } from "../../error/errors";
+import { NotFoundError, ValidationError } from "../../error/errors";
 import { addEmployeeToCompany, removeEmployeeFromCompany } from "../company/company.service";
 import { CreateEmployeeDto } from "./dto/create-employee.dto";
 import { GetEmployeeDto } from "./dto/get-employee.dto";
@@ -18,6 +18,9 @@ const createEmployee = (employee: CreateEmployeeDto): GetEmployeeDto => {
         employees.delete(currentId);
         if (e instanceof NotFoundError) {
             throw new NotFoundError(`Company with id ${employee.companyId} not found`);
+        }
+        if (e instanceof ValidationError) {
+            throw new ValidationError(e.message, e.errors);
         }
     }
 

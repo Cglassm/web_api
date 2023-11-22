@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createCompany, deleteCompany, getCompanies, getCompany } from "../app/company/company.service";
+import { createCompany, deleteCompany, getCompanies, getCompany, updateCompanyWebsite } from "../app/company/company.service";
 import { handleHttpError } from "../error/error.handler";
 
 
@@ -23,7 +23,6 @@ const getAll = (req: Request, res: Response) => {
 
 const getCompanyById = ({params}: Request, res: Response) => {
     try {
-        //PREGUNTAR: Por que se pone asi 
         const { id } = params;
         const result = getCompany(parseInt(id));
         res.status(200).send(result);
@@ -42,4 +41,14 @@ const deleteCompanyById = ({ params }: Request, res: Response) => {
     }
 }
 
-export { create, getAll, getCompanyById, deleteCompanyById}
+const patchCompanyWebsite = ({ params, body }: Request, res: Response) => {
+    try {
+        const { id } = params;
+        const result = updateCompanyWebsite(parseInt(id), body);
+        res.status(200).send(result);
+    } catch (error: any) {
+        handleHttpError(res, error);
+    }
+}
+
+export { create, getAll, getCompanyById, deleteCompanyById, patchCompanyWebsite}

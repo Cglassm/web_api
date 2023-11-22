@@ -20,14 +20,24 @@ const createCompany = (company) => {
 exports.createCompany = createCompany;
 const getCompanies = () => {
     const result = [];
-    companies.forEach(company => {
-        result.push({
-            id: company.id,
-            name: company.name,
-            website: company.website,
-            additionalNotes: company.additionalNotes,
+    companies.forEach(c => {
+        const companyDto = {
+            id: c.id,
+            name: c.name,
+            website: c.website,
+            additionalNotes: c.additionalNotes,
             employees: []
+        };
+        c.employees.forEach(e => {
+            companyDto.employees.push({
+                id: e.id,
+                firstName: e.firstName,
+                lastName: e.lastName,
+                email: e.email,
+                phoneNumber: e.phoneNumber
+            });
         });
+        result.push(companyDto);
     });
     return result;
 };
@@ -62,7 +72,7 @@ const deleteCompany = (id) => {
         throw new errors_1.NotFoundError(`Company with id ${id} not found`);
     }
     if (company.employees.length > 0) {
-        throw new errors_1.ValidationError("Cannot delete company with id ${id}", ["The company has employees. Remove them first."]);
+        throw new errors_1.UnauthorizedError("Cannot delete company with id ${id}. The company has employees. Remove them first.");
     }
     companies.delete(id);
 };
@@ -71,6 +81,9 @@ const addEmployeeToCompany = (companyId, employee) => {
     const company = companies.get(companyId);
     if (!company) {
         throw new errors_1.NotFoundError(`Company with id ${companyId} not found`);
+    }
+    if (company.employees.length >= 3) {
+        throw new errors_1.ValidationError("Cannot add employee to company with id ${companyId}", ["The company has too many employees. Remove some of them first."]);
     }
     company.employees.push(employee);
 };

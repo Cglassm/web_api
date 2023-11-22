@@ -25,7 +25,6 @@ const getAll = (req, res) => {
 exports.getAll = getAll;
 const getCompanyById = ({ params }, res) => {
     try {
-        //PREGUNTAR: Por que se pone asi 
         const { id } = params;
         const result = (0, company_service_1.getCompany)(parseInt(id));
         res.status(200).send(result);
